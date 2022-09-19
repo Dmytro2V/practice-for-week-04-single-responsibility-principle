@@ -1,3 +1,5 @@
+//CALCULATION IS WRONG!!! SUBMITTED AN ISSUE
+
 /******************************** CONSTANTS *********************************/ 
 const applePieRecipe = [
   { name: "pie crust", cost: 10.00, quantity: 1 },
@@ -34,37 +36,66 @@ const recipes = {
 
 /*************************** FUNCTION TO REFACTOR ****************************/
 function bakeAndSellPies(pieType, pieQuantity, profitMargin) {
+
   // Find the recipe for the pieType specified
   const recipe = recipes[pieType];
-  // Bake the number of pies specified by the pieQuantity
+
+  // Bake the number of pies specified by the pieQuantity (reporting number and ingreds)
+  bakePies(pieType, recipe, pieQuantity); 
+
+  // Calculate the cost of each pie based on the cost of each ingredient
+  let costOfPie=calcCostOfPie(recipe);
+
+  // Calculate total revenue of all the pies
+  let totalRevenue = calcTotalRevenue (costOfPie, pieQuantity, profitMargin)
+  
+  // Print cost and revenue:
+  console.log(`Cost per pie: ${costOfPie}`);
+  console.log(`Sold ${pieQuantity} pies for $${totalRevenue.toFixed(2)}!`);
+}  
+
+function bakePies(pieType, recipe, pieQuantity) {
   for (let i = 0; i < pieQuantity; i++) {
     // Print the ingredients for each ingredient in the recipe
-    let combiningMsg = `Combining ingredients for ${pieType}: `
-    combiningMsg += recipe.map(ingredient => ingredient.name).join(', ');
-    console.log(combiningMsg);
-
+    printIngreds(pieType, recipe);
     // Print the nth pie that was baked
     console.log(`Baked pie ${i + 1}!`);
   }
 
-  // Print the cost of each pie based on the cost of each ingredient
+}
+
+function printIngreds(pieType, recipe) {
+  // Print the ingredients for each ingredient in the recipe  
+  let combiningMsg = `Combining ingredients for ${pieType}: `
+  combiningMsg += recipe.map(ingredient => ingredient.name).join(', ');
+  console.log(combiningMsg);
+}
+
+function calcCostOfPie(recipe) {
+  // Calculate the cost of each pie based on the cost of each ingredient
   const costOfPie = recipe.reduce((prev, current) => {
     return prev + current.cost;
   }, recipe[0].cost);
-  console.log(`Cost per pie: ${costOfPie}`);
+  
+  return costOfPie;
+}
 
-  // Calculate the total cost of all the pies
+function calcTotalRevenue (costOfPie, pieQuantity, profitMargin) {
+  // Calculate  total revenue of of all the pies
+  
+  // Calculate total cost of all the pies
   const totalCost = costOfPie * pieQuantity;
 
-  // Print the total revenue calculated using the given profitMargin
-  const revenue = totalCost * (profitMargin || 1.2);
-  console.log(`Sold ${pieQuantity} pies for $${revenue.toFixed(2)}!`);
+  // Calculate the total revenue using the given profitMargin
+   const revenue = totalCost * (profitMargin || 1.2);
+
+  return revenue;
 }
 
 /******************************* LOCAL TESTS *******************************/
-// bakeAndSellPies("applePie", 5, 2.5);
-// bakeAndSellPies("pumpkinPie", 2);
-// bakeAndSellPies("cherryPie", 7, 1.7);
+ bakeAndSellPies("applePie", 5, 2.5);
+ bakeAndSellPies("pumpkinPie", 2);
+ bakeAndSellPies("cherryPie", 7, 1.7);
 
 /**************************************************************************/
 /* DO NOT CHANGE THE CODE BELOW */
